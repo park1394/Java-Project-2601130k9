@@ -14,6 +14,10 @@ public class _3_MainClass {
         _3_MemberBase[] members = new _3_MemberBase[5];
         int count = 0; // 현재 저장된 회원 수 (배열 인덱스 관리용)
 
+        // 260120_실습4_풀이_업그레이드_임시저장파일_추가, 순서4
+        //프로그램 시작시, 파일에서 회원 정보 불러오기.
+        count = loadMembers(members);
+
         // 260120_실습4_풀이_로그인한_유저_표기추가, 순서1
         // 현재 로그인한 회원을 저장할 변수 (초기갓 null)
         // 로그인 후, 로그인한 유저로 값을 채울 예정.
@@ -278,13 +282,28 @@ public class _3_MainClass {
                     // Integer.parseInt : 문자열 -> 숫자로 변환
                     int age = Integer.parseInt(data[3]);
 
+                    // 파일에서 읽어온 내용을 -> 메모리 상의 배열에 담기.
+                    //name,email,password,age -> 객체에 담고 -> 배열에 담기.
+                    members[loadCount] = new _3_NormalMember(name,email,password,age);
+                    // 파일에서 불러온 사람의 숫자를 확인하는 상태 변수 카운트 1증가.
+                    loadCount++;
+
                 }
             }
+            System.out.println("파일 불러오기 완료 :" + loadCount + "명의 회원 정보를 불러옴.");
         }catch (IOException e){
-
+            System.out.println("파일 불러오기 실패 원인 : " + e.getMessage());
         }finally {
-
-        }
+            // 자원 반납. 읽어 오는 도구 자원반납, 스캐너 다 사용 후 반납하듯이
+            if( br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    System.out.println("파일 닫기 실패");
+                }
+            }
+        } // finally 닫기
+        return loadCount;
     }
 
 }// _3_MainClass 닫기
