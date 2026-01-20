@@ -1,9 +1,6 @@
 package _6_test_260120.ex;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 
 public class _3_MainClass {
@@ -230,5 +227,64 @@ public class _3_MainClass {
 
 // 260120_실습4_풀이_업그레이드_임시저장파일_추가, 순서3
 //    2) 불러오는 기능의 메서드 만들기, 정적(static)
+    // 준비물 : 1) 메모리에 저장된 배열, members
+    public static int loadMembers(_3_MemberBase[] members){
+        // 물리 파일 : FILE_NAME = members.txt 파일에 접근하고, 가져오는 기능을 담당하는 클래스를 이용.
+        // 담당 클래스 : File
+        // 스캐너 도구를 사용 하듯이,
+        // 파일 도구를 이용하기.
+        File file = new File(FILE_NAME);
+
+        // 유효성, 파일 무조건 있다는 보장이 없음. 그래서, 안전 장치 달기.
+        // 파일이 없다면, 해당 기능 실행을 중지.
+        if(!file.exists()) { // 해당 파일이 존재 안하니? true(파일없다)
+            return 0;
+        }
+
+        // 실제 불러올 멤버의 숫자(상태 변수)
+        int loadCount = 0;
+
+        // 버퍼를 이용해서 빠르게 불러오기, 도구를 사용하기.
+        BufferedReader br = null;
+
+        // 실험장에서 작업하기. 왜? 파일을 읽고, 쓰는 작업 여기서 하기로 약속 했음
+        // 만약 안하면? 그러면 실행 안해줘!!!!
+        try {
+            // new FileReader(file) : 물리 파일 읽는 도구
+            // new BufferedReader : 빨리 읽어주는 도구.
+            // br : 파일에서 읽었던 내용이 모두 br 에 들어가 있음(내용물)
+            br = new BufferedReader(new FileReader(file));
+
+            // 파일에서 읽어온 내용을 한줄씩 임의로 담아둘 변수.
+            String line;
+            // br.readLine(), : 전체 내용중에서, 한줄 읽기.
+            while ((line = br.readLine()) != null ) {
+                // 유효성 기본 체크, 읽을 때, 배열의 크기 이상을 읽지 못하게 막기.
+                // 예시) loadCount : 4, members : 회원 가입된 인원 3명
+                // 못 불러옴. 그래서 오류가 나니까, 미연에 방지하자.
+                if(loadCount >= members.length) {
+                    break;
+                }
+                // 정상적으로 불러오는 경우
+                // 쉼표를 기준으로 데이터를 불러오기.
+                // 예시) line = "이상용,lsy@naver.com,1234,20"
+                // split -> 문자열.split(","), 콤마를 기준으로 단어를 분리함.
+                // String[] data = { "이상용", "lsy@naver.com",  "1234", "20"  }
+                String[] data = line.split(",");
+                if( data.length == 4) {
+                    String name = data[0];
+                    String email = data[1];
+                    String password = data[2];
+                    // Integer.parseInt : 문자열 -> 숫자로 변환
+                    int age = Integer.parseInt(data[3]);
+
+                }
+            }
+        }catch (IOException e){
+
+        }finally {
+
+        }
+    }
 
 }// _3_MainClass 닫기
